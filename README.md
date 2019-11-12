@@ -1,9 +1,3 @@
-# What is iguama SDK project
-
-The mission of the iguama SDK is to meet the needs of multiple loyalty programs users to use loyalty program points to purchase products on the amazon.com. When loyalty program integrates iguama SDK, it helps the loyalty program user redeem points for what you need from amazon.com 
-The SDK is based on webview. The functions such as my account and UI presentation are on the mobile website. The SDK only implements user authorization, quote which includes 4 pages, such as shopping cart, payment method, place order and thank you page. Since user has the same way to purchase products on amazon.com, only if SDK can authorize user in the same way, different APPs can use the same SDK. Different APPs can be opened on the specified mobile website through the different client id, client key and other configurations. After starting up the SDK, the website can be used for a guide to go shopping on amazon.com. 
-
-# How does iguama SDK work
 # Redemption Platform
 
 ## Introduction
@@ -36,20 +30,20 @@ Step 2:
  * Configuration
  
  Open "AppDelegate.swif" file, and edit the following three parameters:
- 
-  ```bash
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {        
-          // clientId、clientKey、exchageRate、themeColor、sdkLogoImage、isSandbox
-  IGInteractionMethod.config(clientId: “IOS_LATAMPASS_ID”, clientKey: “IOS_LATAMPASS_KEY”, sdkLogoImage: sdkLogoImge, isSandbox: false)
-          return true
-  }
-  ```
-Parameters | Type/Required | Description
-  ----- | ---- | -----------
-  clientId | string/required | Loyal program’s identity Id for SDK.
-  clientKey | string/required |  Loyal program’s secret key  for SDK
-  sdkLogoImage | file/required | logo icon.
-  isSandbox | string/required | True is for sandbox test, false is for prod evn.
+    
+```bash
+     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {        
+             // clientId、clientKey、sdkLogoImage、isSandbox
+     IGInteractionMethod.config(clientId: "IOS_LATAMPASS_ID", clientKey: "IOS_LATAMPASS_KEY", sdkLogoImage: sdkLogoImge, isSandbox: false)
+             return true
+     }
+```
+   Parameters | Type/Required | Description
+     ----- | ---- | -----------
+     clientId | string/required | Loyal program’s identity Id for SDK.
+     clientKey | string/required |  Loyal program’s secret key  for SDK
+     sdkLogoImage | file/required | logo icon.
+     isSandbox | string/required | True is for sandbox test, false is for prod evn.
  
   * User Authorization
   
@@ -64,6 +58,98 @@ b.user from website
   let interactionMethod = IGInteractionMethod()
   interactionMethod.login()
   ```
+  
+  ### Android Integration
+  
+  * import code
+  
+  Step 1: 
+  
+  import com.iguama.redemptions.aar into libs folder in the merchant project, as shown in the figure below. Go to the project's Java Build Path and import com.iguama.redemptions.aar under libs. Select Order and Export, and check com.iguama.redemptions.aar.
+  
+  Step 2:
+  
+  In he build.gradle of your main project, add the following content to make the libs directory a dependent repository:
+   ```bash
+   allprojects {     
+                  repositories {                
+                      flatDir {             
+                          dirs 'libs'         
+                      }          
+                   } 
+              }
+   ```
+   
+   Step 3:
+   In the build.gradle of your App Module, add the following to the com.iguama.redemptions SDK as a project dependency:
+   
+```bash
+      dependencies {    
+                      compile (name: 'com.iguama.redemptions', ext: 'aar') 
+      }
+```
+      
+      
+   * Configuration
+
+Add the following declaration into file AndroidManifest.xml in the project:
+    
+ ```bash
+       <meta-data
+           android:name="com.iguama.client_id"
+           android:value="${client_id}" />
+       <meta-data
+           android:name="com.iguama.secret_key"
+           android:value="${secret_key}" />
+       <meta-data
+           android:name="com.iguama.is_qa"
+           android:value="true" />
+       <meta-data
+           android:name="com.iguama.icon"
+           android:resource="@mipmap/ic_logo" />
+```
+
+   Parameters | Type/Required | Description
+     ----- | ---- | -----------
+     com.iguama.client_id | string/required | Loyal program’s identity Id for SDK.
+     com.iguama.secret_key | string/required |  Loyal program’s secret key  for SDK
+     com.iguama.icon | file/required | logo icon.
+     com.iguama.is_qa | string/required | True is for sandbox test, false is for prod evn.
+   
+  
+   * User Authorization
+    
+  a.user from app
+  
+ ```bash
+     IguamaSDK iguamaSDK = new IguamaSDK.Builder(getApplication())
+                    .userId("userId")
+                    .firstName("firstName")
+                    .lastName("lastName")
+                    .email("email")
+                    .balance(10000)
+                    .accessToken("xxxxxx")
+                    .build();
+                    
+           iguamaSDK.launch();
+ ```
+  
+  b.user from website
+```bash
+    IguamaSDK iguamaSDK = new IguamaSDK.Builder(getApplication());
+                        
+               iguamaSDK.launch();
+ ```
+  
+  Parameters | Type/Required | Description
+  ----- | ---- | -----------
+  userId | string/required | User's member id.
+  firstName | string/required | User's first name.
+  lastName | string/optional | User's last name.
+  email | string/optional | User's email.
+  balance | int/required | User's available balance.
+  accessToken | string/required | Access token need to be verified when redeem. 
+     
 ## Authentication
 
 The Plaform handles user authentication through OAuth2 authorization framework, so the authorization itself happens within the Loyalty program's website, The Platform interacts with loyalty program's technology to obtain the authorization grant needed to access the user's account. Further information about OAuth2 can be found [here](https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2).
@@ -347,4 +433,3 @@ clientId | String/required | Loyalty program's identify for SDK.
 clientKey | String/required | Loyalty program's secret key for SDK.
 logoImage | File/required | Loyalty program's logo.
 isSandbox | Boolean/required | Indicates if it should behave as test environment.
-
