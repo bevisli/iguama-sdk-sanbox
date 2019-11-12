@@ -24,9 +24,9 @@ Start the IDE such as Xcode, copy the files in the file into the folder and impo
 Step 2:
 
  Add import to where IGWebSiteSDK is required
- ```bash
+```bash
  #import IGWebSiteSDK;
- ```
+```
  * Configuration
  
  Open "AppDelegate.swif" file, and edit the following three parameters:
@@ -38,26 +38,26 @@ Step 2:
              return true
      }
 ```
- Parameters | Type/Required | Description
- ----- | ---- | -----------
-     clientId | string/required | Loyal program’s identity Id for SDK.
-     clientKey | string/required |  Loyal program’s secret key  for SDK
-     sdkLogoImage | file/required | logo icon.
-     isSandbox | string/required | True is for sandbox test, false is for prod evn.
+Parameters | Type/Required | Description
+----- | ---- | -----------
+clientId | string/required | Loyal program’s identity Id for SDK.
+clientKey | string/required |  Loyal program’s secret key  for SDK
+sdkLogoImage | file/required | logo icon.
+isSandbox | string/required | True is for sandbox test, false is for prod evn.
  
   * User Authorization
   
 a.user from app
-   ```bash
+```bash
   let interactionMethod = IGInteractionMethod(member_id: member_id, first_name: first_name, last_name: last_name, email: email, balance: balance, access_token: access_token)
   interactionMethod.login()
-  ```
+```
 
 b.user from website
-   ```bash
+```bash
   let interactionMethod = IGInteractionMethod()
   interactionMethod.login()
-  ```
+```
   
   ### Android Integration
   
@@ -70,7 +70,7 @@ b.user from website
   Step 2:
   
   In he build.gradle of your main project, add the following content to make the libs directory a dependent repository:
-   ```bash
+```bash
    allprojects {     
                   repositories {                
                       flatDir {             
@@ -78,7 +78,7 @@ b.user from website
                       }          
                    } 
               }
-   ```
+```
    
    Step 3:
    In the build.gradle of your App Module, add the following to the com.iguama.redemptions SDK as a project dependency:
@@ -88,8 +88,7 @@ b.user from website
                       compile (name: 'com.iguama.redemptions', ext: 'aar') 
       }
 ```
-      
-      
+   
    * Configuration
 
 Add the following declaration into file AndroidManifest.xml in the project:
@@ -109,12 +108,12 @@ Add the following declaration into file AndroidManifest.xml in the project:
            android:resource="@mipmap/ic_logo" />
 ```
 
- Parameters | Type/Required | Description
- ----- | ---- | -----------
-     com.iguama.client_id | string/required | Loyal program’s identity Id for SDK.
-     com.iguama.secret_key | string/required |  Loyal program’s secret key  for SDK
-     com.iguama.icon | file/required | logo icon.
-     com.iguama.is_qa | string/required | True is for sandbox test, false is for prod evn.
+Parameters | Type/Required | Description
+----- | ---- | -----------
+com.iguama.client_id | string/required | Loyal program’s identity Id for SDK.
+com.iguama.secret_key | string/required |  Loyal program’s secret key  for SDK
+com.iguama.icon | file/required | logo icon.
+com.iguama.is_qa | string/required | True is for sandbox test, false is for prod evn.
    
   
    * User Authorization
@@ -141,14 +140,14 @@ Add the following declaration into file AndroidManifest.xml in the project:
                iguamaSDK.launch();
  ```
   
-  Parameters | Type/Required | Description
-  ----- | ---- | -----------
-  userId | string/required | User's member id.
-  firstName | string/required | User's first name.
-  lastName | string/optional | User's last name.
-  email | string/optional | User's email.
-  balance | int/required | User's available balance.
-  accessToken | string/required | Access token need to be verified when redeem. 
+Parameters | Type/Required | Description
+----- | ---- | -----------
+userId | string/required | User's member id.
+firstName | string/required | User's first name.
+lastName | string/optional | User's last name.
+email | string/optional | User's email.
+balance | int/required | User's available balance.
+accessToken | string/required | Access token need to be verified when redeem. 
      
 ## Authentication
 
