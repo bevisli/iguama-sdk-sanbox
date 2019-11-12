@@ -38,8 +38,8 @@ Step 2:
              return true
      }
 ```
-   Parameters | Type/Required | Description
-     ----- | ---- | -----------
+ Parameters | Type/Required | Description
+ ----- | ---- | -----------
      clientId | string/required | Loyal program’s identity Id for SDK.
      clientKey | string/required |  Loyal program’s secret key  for SDK
      sdkLogoImage | file/required | logo icon.
@@ -109,8 +109,8 @@ Add the following declaration into file AndroidManifest.xml in the project:
            android:resource="@mipmap/ic_logo" />
 ```
 
-   Parameters | Type/Required | Description
-     ----- | ---- | -----------
+ Parameters | Type/Required | Description
+ ----- | ---- | -----------
      com.iguama.client_id | string/required | Loyal program’s identity Id for SDK.
      com.iguama.secret_key | string/required |  Loyal program’s secret key  for SDK
      com.iguama.icon | file/required | logo icon.
