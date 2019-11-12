@@ -12,6 +12,163 @@ The overall process is composed of three steps:
 * Redemption Reversal
 * Platform integration
 
+## Platform integration
+
+There are two method available to integrate with our platform:
+1. Google Chrome Extension
+2. Mobile SDK (iOS & Android)
+
+The `1.` it's the default one and the Google Chrome Extension will be provided by iguama to the loyalty program.
+
+To integrate with our SDK, below we provide the instructions for each mobile OS.
+
+### iOS Integration
+
+* import code
+
+Step 1: 
+
+Start the IDE such as Xcode, copy the files in the file into the folder and import them into the project.
+
+Step 2:
+
+ Add import to where IGWebSiteSDK is required
+```bash
+ #import IguamaRedemptionsSDK;
+```
+ * Configuration
+ 
+ Open "AppDelegate.swif" file, and edit the following three parameters:
+    
+```bash
+     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {        
+             // clientId、clientKey、sdkLogoImage、isSandbox
+     IGInteractionMethod.config(clientId: "IOS_LATAMPASS_ID", clientKey: "IOS_LATAMPASS_KEY", sdkLogoImage: sdkLogoImge, isSandbox: false)
+             return true
+     }
+```
+Parameters | Type/Required | Description
+----- | ---- | -----------
+clientId | string/required | Loyal program’s identity Id for SDK.
+clientKey | string/required |  Loyal program’s secret key  for SDK
+sdkLogoImage | file/required | logo icon.
+isSandbox | string/required | True is for sandbox test, false is for prod evn.
+ 
+  * User Authorization
+  
+a. Authorizate user from app
+```bash
+  let interactionMethod = IGInteractionMethod(member_id: member_id, first_name: first_name, last_name: last_name, email: email, balance: balance, access_token: access_token)
+  interactionMethod.login()
+```
+
+b. Authorizate user from website
+```bash
+  let interactionMethod = IGInteractionMethod()
+  interactionMethod.login()
+```
+Parameters | Type/Required | Description
+----- | ---- | -----------
+member_id | string/required | User's member id.
+first_name | string/required | User's first name.
+last_name | string/optional | User's last name.
+email | string/optional | User's email.
+balance | int/required | User's available balance.
+access_token | string/required | Access token need to be verified when redeem. 
+
+  ### Android Integration
+  
+  * import code
+  
+  Step 1: 
+  
+  import com.iguama.redemptions.aar into libs folder in the merchant project, as shown in the figure below. Go to the project's Java Build Path and import com.iguama.redemptions.aar under libs. Select Order and Export, and check com.iguama.redemptions.aar.
+  
+  
+  ![Import com.iguama.redemptions.aar into libs folder within your project](https://raw.githubusercontent.com/iguama/iguama.github.io/master/media/android-integration-figure-1.png)
+  
+  Step 2:
+  
+  In he build.gradle of your main project, add the following content to make the libs directory a dependent repository:
+```bash
+   allprojects {     
+                  repositories {                
+                      flatDir {             
+                          dirs 'libs'         
+                      }          
+                   } 
+              }
+```
+   
+   Step 3:
+   In the build.gradle of your App Module, add the following to the com.iguama.redemptions SDK as a project dependency:
+   
+```bash
+      dependencies {    
+                      compile (name: 'com.iguama.redemptions', ext: 'aar') 
+      }
+```
+   
+   * Configuration
+
+Add the following declaration into file AndroidManifest.xml in the project:
+    
+ ```bash
+       <meta-data
+           android:name="com.iguama.client_id"
+           android:value="${client_id}" />
+       <meta-data
+           android:name="com.iguama.secret_key"
+           android:value="${secret_key}" />
+       <meta-data
+           android:name="com.iguama.is_qa"
+           android:value="true" />
+       <meta-data
+           android:name="com.iguama.icon"
+           android:resource="@mipmap/ic_logo" />
+```
+
+Parameters | Type/Required | Description
+----- | ---- | -----------
+com.iguama.client_id | string/required | Loyal program’s identity Id for SDK.
+com.iguama.secret_key | string/required |  Loyal program’s secret key  for SDK
+com.iguama.icon | file/required | logo icon.
+com.iguama.is_qa | string/required | True is for sandbox test, false is for prod evn.
+   
+  
+   * User Authorization
+    
+  a. Authorizate user from app
+  
+ ```bash
+     IguamaSDK iguamaSDK = new IguamaSDK.Builder(getApplication())
+                    .userId("userId")
+                    .firstName("firstName")
+                    .lastName("lastName")
+                    .email("email")
+                    .balance(10000)
+                    .accessToken("xxxxxx")
+                    .build();
+                    
+           iguamaSDK.launch();
+ ```
+  
+  b. Authorizate user from website
+```bash
+    IguamaSDK iguamaSDK = new IguamaSDK.Builder(getApplication());
+                        
+               iguamaSDK.launch();
+ ```
+  
+Parameters | Type/Required | Description
+----- | ---- | -----------
+userId | string/required | User's member id.
+firstName | string/required | User's first name.
+lastName | string/optional | User's last name.
+email | string/optional | User's email.
+balance | int/required | User's available balance.
+accessToken | string/required | Access token need to be verified when redeem. 
+
 ## Authentication
 
 The Plaform handles user authentication through OAuth2 authorization framework, so the authorization itself happens within the Loyalty program's website, The Platform interacts with loyalty program's technology to obtain the authorization grant needed to access the user's account. Further information about OAuth2 can be found [here](https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2).
@@ -205,162 +362,7 @@ Field | Type | Description
 ----- | ---- | -----------
 id | String | Id of the redemption reversal operation, for reference purposes.
 
-## Platform integration
 
-There are two method available to integrate with our platform:
-1. Google Chrome Extension
-2. Mobile SDK (iOS & Android)
-
-The `1.` it's the default one and the Google Chrome Extension will be provided by iguama to the loyalty program.
-
-To integrate with our SDK, below we provide the instructions for each mobile OS.
-
-### iOS Integration
-
-* import code
-
-Step 1: 
-
-Start the IDE such as Xcode, copy the files in the file into the folder and import them into the project.
-
-Step 2:
-
- Add import to where IGWebSiteSDK is required
-```bash
- #import IguamaRedemptionsSDK;
-```
- * Configuration
- 
- Open "AppDelegate.swif" file, and edit the following three parameters:
-    
-```bash
-     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {        
-             // clientId、clientKey、sdkLogoImage、isSandbox
-     IGInteractionMethod.config(clientId: "IOS_LATAMPASS_ID", clientKey: "IOS_LATAMPASS_KEY", sdkLogoImage: sdkLogoImge, isSandbox: false)
-             return true
-     }
-```
-Parameters | Type/Required | Description
------ | ---- | -----------
-clientId | string/required | Loyal program’s identity Id for SDK.
-clientKey | string/required |  Loyal program’s secret key  for SDK
-sdkLogoImage | file/required | logo icon.
-isSandbox | string/required | True is for sandbox test, false is for prod evn.
- 
-  * User Authorization
-  
-a. Authorizate user from app
-```bash
-  let interactionMethod = IGInteractionMethod(member_id: member_id, first_name: first_name, last_name: last_name, email: email, balance: balance, access_token: access_token)
-  interactionMethod.login()
-```
-
-b. Authorizate user from website
-```bash
-  let interactionMethod = IGInteractionMethod()
-  interactionMethod.login()
-```
-Parameters | Type/Required | Description
------ | ---- | -----------
-member_id | string/required | User's member id.
-first_name | string/required | User's first name.
-last_name | string/optional | User's last name.
-email | string/optional | User's email.
-balance | int/required | User's available balance.
-access_token | string/required | Access token need to be verified when redeem. 
-
-  ### Android Integration
-  
-  * import code
-  
-  Step 1: 
-  
-  import com.iguama.redemptions.aar into libs folder in the merchant project, as shown in the figure below. Go to the project's Java Build Path and import com.iguama.redemptions.aar under libs. Select Order and Export, and check com.iguama.redemptions.aar.
-  
-  
-  ![Import com.iguama.redemptions.aar into libs folder within your project](https://raw.githubusercontent.com/iguama/iguama.github.io/master/media/android-integration-figure-1.png)
-  
-  Step 2:
-  
-  In he build.gradle of your main project, add the following content to make the libs directory a dependent repository:
-```bash
-   allprojects {     
-                  repositories {                
-                      flatDir {             
-                          dirs 'libs'         
-                      }          
-                   } 
-              }
-```
-   
-   Step 3:
-   In the build.gradle of your App Module, add the following to the com.iguama.redemptions SDK as a project dependency:
-   
-```bash
-      dependencies {    
-                      compile (name: 'com.iguama.redemptions', ext: 'aar') 
-      }
-```
-   
-   * Configuration
-
-Add the following declaration into file AndroidManifest.xml in the project:
-    
- ```bash
-       <meta-data
-           android:name="com.iguama.client_id"
-           android:value="${client_id}" />
-       <meta-data
-           android:name="com.iguama.secret_key"
-           android:value="${secret_key}" />
-       <meta-data
-           android:name="com.iguama.is_qa"
-           android:value="true" />
-       <meta-data
-           android:name="com.iguama.icon"
-           android:resource="@mipmap/ic_logo" />
-```
-
-Parameters | Type/Required | Description
------ | ---- | -----------
-com.iguama.client_id | string/required | Loyal program’s identity Id for SDK.
-com.iguama.secret_key | string/required |  Loyal program’s secret key  for SDK
-com.iguama.icon | file/required | logo icon.
-com.iguama.is_qa | string/required | True is for sandbox test, false is for prod evn.
-   
-  
-   * User Authorization
-    
-  a. Authorizate user from app
-  
- ```bash
-     IguamaSDK iguamaSDK = new IguamaSDK.Builder(getApplication())
-                    .userId("userId")
-                    .firstName("firstName")
-                    .lastName("lastName")
-                    .email("email")
-                    .balance(10000)
-                    .accessToken("xxxxxx")
-                    .build();
-                    
-           iguamaSDK.launch();
- ```
-  
-  b. Authorizate user from website
-```bash
-    IguamaSDK iguamaSDK = new IguamaSDK.Builder(getApplication());
-                        
-               iguamaSDK.launch();
- ```
-  
-Parameters | Type/Required | Description
------ | ---- | -----------
-userId | string/required | User's member id.
-firstName | string/required | User's first name.
-lastName | string/optional | User's last name.
-email | string/optional | User's email.
-balance | int/required | User's available balance.
-accessToken | string/required | Access token need to be verified when redeem. 
      
 
 #### Import code
